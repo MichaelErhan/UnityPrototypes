@@ -46,10 +46,10 @@ namespace Netologia.TowerDefence.Behaviors
 		private Button _endGameButton;
 
 		public void SetHP(int value)
-			=> _hp.text = value.ToString();
+			=> _hp.text = "НР " + value.ToString();
 		
 		public void SetGold(float value)
-			=> _gold.text = Mathf.RoundToInt(value).ToString();
+			=> _gold.text = "GOLD " + Mathf.RoundToInt(value).ToString();
 
 		public void ManualUpdate()
 		{
@@ -61,7 +61,7 @@ namespace Netologia.TowerDefence.Behaviors
 			else _timer.text = string.Empty;
 			
 			if (!_inWave)
-				_timer.text = Mathf.RoundToInt(_controller.Delay).ToString();
+				_timer.text = "Time " + Mathf.RoundToInt(_controller.Delay).ToString();
 		}
 		
 		public void GameLose()

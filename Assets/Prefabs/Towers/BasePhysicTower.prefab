@@ -24,13 +24,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 858224139370566851}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_LocalScale: {x: 0.20000002, y: 0.20000002, z: 0.20000002}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3444669218660672636}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8333834842564511513
 SpriteRenderer:
@@ -109,6 +109,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3985529367339830784}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.252, y: -1.232, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 1}
@@ -116,7 +117,6 @@ Transform:
   m_Children:
   - {fileID: 517632081409278349}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1653075312896321133
 SpriteRenderer:
@@ -159,12 +159,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: 21300006, guid: 9d69ae98725365b4b94189120dc1b40a, type: 3}
+  m_Sprite: {fileID: -2000183970, guid: ba9b8aa141110d54a83c96d4fa9e8652, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.14, y: 0.21}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -205,6 +205,6 @@ MonoBehaviour:
     Cost: 25
   <AttackElemental>k__BackingField: 0
   <Projectile>k__BackingField: {fileID: 2267144581088698365, guid: b2106a8d26bf39e49a67211629c0c5af, type: 3}
-  <AttackEffect>k__BackingField: {fileID: 0}
-  <AttackSound>k__BackingField: {fileID: 0}
+  <AttackEffect>k__BackingField: {fileID: 198000010021673064, guid: 14d81e2c407975245973a11cdfbeb902, type: 3}
+  <AttackSound>k__BackingField: {fileID: 8300000, guid: d83716bf4e61262459245db250a77e93, type: 3}
   _rangeBack: {fileID: 8333834842564511513}

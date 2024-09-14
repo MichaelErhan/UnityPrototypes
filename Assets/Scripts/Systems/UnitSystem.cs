@@ -81,22 +81,23 @@ namespace Netologia.Systems
 
         private void DespawnUnit(Unit unit, in Vector3 position)
 		{
-			//Create HitEffect
-			if (unit.HasEffect)
+            //Create HitEffect
+            if (unit.HasEffect)
 			{
-				var effect = _effects[unit.DieEffect].Get;
-				effect.transform.position = position;
+                var effect = _effects[unit.DieEffect].Get;
+                effect.transform.position = position;
 				effect.Play();
 			}
+
 			//Play sound
 			if (unit.HasSound)
 			{
 				AudioManager.PlayHit(unit.DieSound);
 			}
 
-			_director.AddMoney(unit.Stats.Cost);
+            _director.AddMoney(unit.Stats.Cost);
 			this[unit.Ref].ReturnElement(unit.ID);
-		}
+        }
 		
 		[Inject]
 		private void Construct(EffectSystem effects, Director director, Constants constants, WaveController path)
