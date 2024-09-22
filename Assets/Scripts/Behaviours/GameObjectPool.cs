@@ -80,7 +80,10 @@ namespace Netologia.Behaviours
 				else
 				{
 					element = _elements[index];
-					element.gameObject.SetActive(true);
+					if (element != null)
+					{
+						element.gameObject.SetActive(true);
+					}
 					if (_activities is not null) _activities[index] = true;
 				}
 

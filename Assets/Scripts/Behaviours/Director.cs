@@ -17,7 +17,7 @@ namespace Netologia.TowerDefence.Behaviors
 		private UnitSystem _units;
 		[SerializeField]
 		private TowerSystem _towers;
-		[SerializeField]
+        [SerializeField]
 		private EffectSystem _effects;
 		
 		[SerializeField]
@@ -115,7 +115,7 @@ namespace Netologia.TowerDefence.Behaviors
 			Container.BindInstance(_projectiles).AsSingle();
 			Container.BindInstance(_units).AsSingle();
 			Container.BindInstance(_towers).AsSingle();
-			Container.BindInstance(_effects).AsSingle();
+            Container.BindInstance(_effects).AsSingle();
 			Container.BindInstance(_wave).AsSingle();
 			Container.BindInstance(_audio).AsSingle();
 			Container.BindInstance(_cell).AsSingle();
@@ -127,7 +127,7 @@ namespace Netologia.TowerDefence.Behaviors
 		{
 			_units.OnDespawnUnitHandler -= _projectiles.OnDespawnUnit;
 			_units.OnDespawnUnitHandler -= _towers.OnDespawnUnit;
-			_wave.OnLastWaveEnded -= OnStartFindFinish;
+            _wave.OnLastWaveEnded -= OnStartFindFinish;
 			_cell.OnTryGoldChanged -= TryChangeGold;
 		}
 

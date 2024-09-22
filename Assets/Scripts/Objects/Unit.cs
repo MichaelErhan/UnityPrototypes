@@ -11,12 +11,8 @@ namespace Netologia.TowerDefence
 		private List<float> _iceEffects;
 
 		public UnitPresetSettings.Stats Stats { get; private set; }
-		
-		[field: SerializeField]
-		public ParticleSystem DieEffect { get; private set; }
 		[field: SerializeField]
 		public AudioClip DieSound { get; private set; }
-		public bool HasEffect { get; private set; }
 		public bool HasSound { get; private set; }
 		public Constants Constants { get; set; }
 		
@@ -88,7 +84,6 @@ namespace Netologia.TowerDefence
 			transform.position = position;
 			if (_fireEffects is null)	//first Spawn
 			{
-				HasEffect = DieEffect != null;
 				HasSound = DieSound != null;
 				Visual = GetComponent<UnitVisual>();
 				

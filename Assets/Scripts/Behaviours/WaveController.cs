@@ -1,6 +1,7 @@
 ﻿using System;
 using Netologia;
 using Netologia.Systems;
+using Netologia.TowerDefence.Behaviors;
 using Netologia.TowerDefence.Settings;
 using UnityEngine;
 using Zenject;
@@ -10,9 +11,10 @@ namespace Behaviours
 	public class WaveController : MonoBehaviour
 	{
 		private UnitSystem _units;				//injected
-		private WavePresetSettings _settings;	//injected
+		private WavePresetSettings _settings;   //injected
+        private InterfaceController _interface;
 
-		private (int Wave, int Pack, int Unit) _data;
+        private (int Wave, int Pack, int Unit) _data;
 		
 		[SerializeField]
 		private Transform[] _paths;
@@ -50,48 +52,66 @@ namespace Behaviours
 				InWave = true;
 		}
 
-		private void RespawnUnit()
-		{
-			var wave = _settings[_data.Wave];
-			var pack = wave.Packs[_data.Pack];
-			//Spawn unit
-			var unit = _units[pack.Prefab].Get;
-			unit.Respawn(pack.Preset.Preset, _spawner.position);
-			_data.Unit++;
-			//Pack isn't over
-			if (_data.Unit < pack.Count)
-			{
-				Delay = pack.SpawnDelay;
-				return;
-			}
-			//Try get new pack
-			_data.Pack++;
-			_data.Unit = 0;
-			//get new pack success
-			if (_data.Pack < _settings[_data.Wave].Packs.Length)
-			{
-				Delay = wave.Packs[_data.Pack].SpawnDelay;
-				return;
-			}
-			
-			//try prepare new wave
-			_data.Wave++;
-			_data.Pack = 0;
-			//prepare new wave
-			if (_data.Wave < _settings.Count)
-			{
-				Delay = _settings[_data.Wave].StartDelay;
-				InWave = false;
-			}
-			//Finish game
-			else
-			{
-				enabled = false;
-				OnLastWaveEnded?.Invoke();
-			}
-		}
-		
-		private void Awake()
+        private void RespawnUnit()
+        {
+            var wave = _settings[_data.Wave];
+            var pack = wave.Packs[_data.Pack];
+
+            // Получаем юнита из пула
+            var unit = _units[pack.Prefab].Get;
+
+            // Проверяем, успешно ли получен юнит
+            if (unit != null)
+            {
+                unit.Respawn(pack.Preset.Preset, _spawner.position);
+                _data.Unit++;
+
+                // Проверяем, остались ли юниты в паке
+                if (_data.Unit < pack.Count)
+                {
+                    Delay = pack.SpawnDelay;
+                    return;
+                }
+            }
+
+            // Если юнит не был создан, продолжаем с остальными юнитами
+            if (_data.Unit >= pack.Count || unit == null)
+            {
+                // Переходим к следующему паку
+                _data.Pack++;
+                _data.Unit = 0;
+
+                // Проверяем, остались ли пакеты в волне
+                if (_data.Pack < _settings[_data.Wave].Packs.Length)
+                {
+                    Delay = wave.Packs[_data.Pack].SpawnDelay;
+                    return;
+                }
+
+                // Переходим к следующей волне
+                _data.Wave++;
+                _data.Pack = 0;
+
+                // Проверяем, остались ли волны
+                if (_data.Wave < _settings.Count)
+                {
+                    Delay = _settings[_data.Wave].StartDelay;
+                    InWave = false;
+                    if (_units.CountActive == 0)
+                    {
+                        _interface.GameWin();
+                    }
+                }
+                // Завершаем игру
+                else
+                {
+                    enabled = false;
+                    OnLastWaveEnded?.Invoke();
+                }
+            }
+        }
+
+        private void Awake()
 			=> Delay = _settings[_data.Wave].StartDelay;
 
 		private void OnDrawGizmos()

@@ -21,34 +21,38 @@ namespace Netologia.Systems
             {
                 foreach (var projectile in pool)
                 {
+                    if (projectile == null) continue;  // Проверка на null самого снаряда
+
                     var transform = projectile.transform;
                     var position = transform.position;
-                    var target = projectile.TargetPosition;
+                    var targetPosition = projectile.TargetPosition;
 
-                    var direction = Vector3.Normalize(target - position);
-                    position += direction * (projectile.MoveSpeed * delta);
-                    transform.up = direction;
-                    transform.position = position;
-
-                    if (Vector3.SqrMagnitude(position - target) <= _hitDistance)
+                    // Проверка на уничтожение цели (цель может быть null)
+                    if (projectile.TargetID == -1 || projectile.TargetPosition == Vector3.zero)
                     {
-                        if (projectile.HasEffect) //Эффект пули при попадании 
-                        {
-                            var effect = _effects[projectile.HitEffect].Get;
-                            effect.transform.position = position;
-                            effect.Play();  //У эффекта должно быть выставлено StopAction -> Disable
-                                            //У его системы галочка DisableTracking должна быть снята (Pools)
-                        }
-                        if (projectile.HasSound)
-                            AudioManager.PlayHit(projectile.HitSound); //Звуковой эффект
-
-                        projectile.DealDamage();
+                        // Если цели больше нет, убираем снаряд
                         this[projectile.Ref].ReturnElement(projectile.ID);
+                        continue;
                     }
 
+                    // Логика движения снаряда
+                    var direction = Vector3.Normalize(targetPosition - position);
+                    position += direction * (projectile.MoveSpeed * delta);
+                    transform.up = direction; // Поворачиваем снаряд в направлении движения
+                    transform.position = position;
+
+                    // Если снаряд достиг цели
+                    if (Vector3.SqrMagnitude(position - targetPosition) <= _hitDistance)
+                    {
+                        projectile.DealDamage(); // Наносим урон
+
+                        // Возвращаем пулю на место после попадания
+                        this[projectile.Ref].ReturnElement(projectile.ID);
+                    }
                 }
             }
         }
+
 
         public void OnDespawnUnit(int unitID)
 		{

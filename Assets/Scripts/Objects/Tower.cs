@@ -35,8 +35,6 @@ namespace Netologia.TowerDefence
 		[field: SerializeField]
 		public Projectile Projectile { get; private set; }
 		[field: SerializeField]
-		public ParticleSystem AttackEffect { get; private set; }
-		[field: SerializeField]
 		public AudioClip AttackSound { get; private set; }
 
 		[SerializeField]
@@ -88,8 +86,6 @@ namespace Netologia.TowerDefence
 		public void Attack()
 		{
 			_delay = AttackDelay;
-			if (_hasEffect)
-				AttackEffect.Play();
 			if(_hasSound)
 				AudioManager.PlayAttack(AttackSound);
 		}
@@ -103,13 +99,6 @@ namespace Netologia.TowerDefence
 
 		protected void Awake()
 		{
-			if (AttackEffect != null)
-			{
-				if (AttackEffect.main.stopAction is ParticleSystemStopAction.None)
-					_hasEffect = true;
-				else
-					LogUtility.Error(nameof(Tower), "Incorrect StopAction in AttackEffect", gameObject);
-			}
 			_hasSound = AttackSound != null;
 		}
 
