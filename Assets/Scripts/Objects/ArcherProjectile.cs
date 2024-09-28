@@ -1,107 +1,90 @@
-using Netologia.Behaviours;
 using Netologia.TowerDefence.Behaviors;
+using Netologia.TowerDefence;
+using Netologia;
+using System.Collections;
 using UnityEngine;
 
-namespace Netologia.TowerDefence
+public class ArcherProjectile : MonoBehaviour
 {
-    public class ArcherProjectile : MonoBehaviour, IPoolElement<Projectile>
+    private float _damage;
+    private Unit _target;
+    private Vector3? _endPosition;
+    private ElementalType _elementalType = ElementalType.Physic;
+    private float _lifetime = 3f; // Время жизни снаряда
+    private float _timer;
+
+    [SerializeField] private float moveSpeed = 5f; // Скорость полета пули
+
+    // Подготовка данных для снаряда (позиция, цель, урон и тип)
+    public void PrepareData(Vector3 position, Unit target, float damage, ElementalType type)
     {
-        private float _damage;
-        private Vector3? _endPosition;
-        private Unit _target;
-        private ElementalType _elementalType;
-        private readonly float _lifetime = 5f; // Время жизни снаряда
-        private float _timer;
+        transform.position = position;
+        _target = target;
+        _damage = damage;
+        _elementalType = type;
+        _endPosition = target != null ? target.transform.position : (Vector3?)null;
+        _timer = 0f; // Сброс таймера жизни снаряда
+    }
 
-        [field: SerializeField]
-        public float MoveSpeed { get; private set; } = 5f; // Значение по умолчанию
+    private void Update()
+    {
+        if (!TimeManager.IsGame) return;
 
-
-        public Projectile Ref { get; set; }
-        public int ID { get; set; }
-
-        // Используем либо текущую позицию цели, либо сохранённую конечную позицию
-        public Vector3 TargetPosition
+        _timer += Time.deltaTime;
+        if (_timer >= _lifetime)
         {
-            get
-            {
-                // Проверяем, не был ли уничтожен объект цели
-                if (_target == null || _target.Equals(null))
-                {
-                    // Возвращаем конечную позицию, если цель была уничтожена
-                    return _endPosition ?? Vector3.zero; // Используем Vector3.zero как fallback
-                }
-
-                // Возвращаем позицию цели, если объект существует
-                return _target.transform.position;
-            }
+            DeactivateProjectile(); // Деактивируем пулю, если время жизни истекло
+            return;
         }
 
-        public int TargetID { get; private set; } = -1;
-
-        // Метод для нанесения урона цели
-        public void DealDamage()
+        if (_target == null && !_endPosition.HasValue)
         {
-            if (_target == null) return;
-
-            _target.CurrentHealth -= _damage;
-
-            // Если здоровье моба <= 0, уничтожаем его и начисляем золото
-            if (_target.CurrentHealth <= 0)
-            {
-                Director.Instance.AddMoney(1);
-                Destroy(_target.gameObject);
-                _target = null; // Убираем ссылку на уничтоженный объект
-            }
-
-            // Уничтожаем снаряд
-            Destroy(gameObject);
+            DeactivateProjectile(); // Деактивируем пулю, если нет цели
+            return;
         }
 
-        // Обнуление цели
-        public void ResetTarget()
+        Vector3 direction = (TargetPosition - transform.position).normalized;
+        transform.position += direction * moveSpeed * Time.deltaTime;
+
+        if (Vector3.Distance(transform.position, TargetPosition) <= 0.2f)
         {
-            _endPosition = null;
-            _target = null;
+            DealDamage(); // Наносим урон, если пуля достигла цели
+        }
+    }
+
+    // Возвращаем текущую позицию цели или конечную позицию, если цель уничтожена
+    private Vector3 TargetPosition
+    {
+        get
+        {
+            if (_target == null || _target.Equals(null))
+            {
+                return _endPosition ?? Vector3.zero; // Возвращаем конечную позицию или Vector3.zero
+            }
+            return _target.transform.position;
+        }
+    }
+
+    // Метод для нанесения урона цели
+    private void DealDamage()
+    {
+        if (_target == null) return;
+
+        _target.CurrentHealth -= _damage;
+
+        // Если здоровье цели меньше или равно 0, уничтожаем цель
+        if (_target.CurrentHealth <= 0)
+        {
+            Director.Instance.AddMoney(1); // Добавляем золото игроку
+            Destroy(_target.gameObject);
         }
 
-        // Подготовка данных для снаряда (позиция, цель, урон и тип)
-        public void PrepareData(Vector3 position, Unit target, float damage, ElementalType type)
-        {
-            transform.position = position;
-            _target = target;
-            _damage = damage;
-            _elementalType = type;
-            _endPosition = target != null ? target.transform.position : (Vector3?)null;
-            TargetID = target.ID;
-        }
+        DeactivateProjectile(); // Деактивируем пулю после нанесения урона
+    }
 
-        // Движение пули
-        private void Update()
-        {
-            if (!TimeManager.IsGame) return;
-
-            _timer += Time.deltaTime;
-            if (_timer >= _lifetime)
-            {
-                Destroy(gameObject); // Уничтожаем снаряд, если время жизни истекло
-                return;
-            }
-
-            if (_target == null && !_endPosition.HasValue)
-            {
-                Destroy(gameObject); // Уничтожаем снаряд, если нет цели
-                return;
-            }
-
-            Vector3 direction = (TargetPosition - transform.position).normalized;
-            transform.position += direction * MoveSpeed * Time.deltaTime;
-
-            if (Vector3.Distance(transform.position, TargetPosition) <= 0.2f)
-            {
-                DealDamage();
-            }
-        }
-
+    // Метод для деактивации пули (возврат в пул)
+    private void DeactivateProjectile()
+    {
+        gameObject.SetActive(false);
     }
 }

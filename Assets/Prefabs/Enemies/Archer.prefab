@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8152050490985675721}
   - component: {fileID: 6450630308397242235}
-  - component: {fileID: 8274842298996414311}
+  - component: {fileID: 5640735827555416198}
   m_Layer: 0
   m_Name: Archer
   m_TagString: Untagged
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8274842298996414311
+--- !u!114 &5640735827555416198
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -97,12 +97,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde85090974448742a16871d8a4e1347, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRange: 8
+  attackRange: 5
   projectilePrefab: {fileID: 8869439438346243337, guid: d963d0adc895a09449c84e85263303f4, type: 3}
   shootPoint: {fileID: 8152050490985675721}
-  shootDelay: 2
-  pathLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  moveSpeed: 2
-  shootingDistance: 6
+  shootDelay: 6
+  moveSpeed: 1
+  shootingDistance: 4

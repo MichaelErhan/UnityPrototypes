@@ -12,7 +12,7 @@ namespace Behaviours
 	{
 		private UnitSystem _units;				//injected
 		private WavePresetSettings _settings;   //injected
-        private InterfaceController _interface;
+		private InterfaceController _controller;
 
         private (int Wave, int Pack, int Unit) _data;
 		
@@ -97,10 +97,6 @@ namespace Behaviours
                 {
                     Delay = _settings[_data.Wave].StartDelay;
                     InWave = false;
-                    if (_units.CountActive == 0)
-                    {
-                        _interface.GameWin();
-                    }
                 }
                 // Завершаем игру
                 else

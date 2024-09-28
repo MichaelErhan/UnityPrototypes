@@ -107,9 +107,12 @@ namespace Netologia.TowerDefence.Behaviors
 		}
 
 		private void OnStartFindFinish()
-			=> _startFindWin = true;
+		{
+            _startFindWin = true;
+        }
 		
-		public override void InstallBindings()
+
+    public override void InstallBindings()
 		{
 			Container.BindInstance(this).AsSingle();
 			Container.BindInstance(_projectiles).AsSingle();

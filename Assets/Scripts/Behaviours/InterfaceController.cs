@@ -1,5 +1,6 @@
 ﻿using System;
 using Behaviours;
+using Netologia.Systems;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -45,7 +46,7 @@ namespace Netologia.TowerDefence.Behaviors
 		[SerializeField]
 		private Button _endGameButton;
 
-		public void SetHP(int value)
+        public void SetHP(int value)
 			=> _hp.text = "НР " + value.ToString();
 		
 		public void SetGold(float value)
@@ -126,5 +127,5 @@ namespace Netologia.TowerDefence.Behaviors
 		[Inject]
 		private void Construct(AudioManager audio, WaveController wave)
 			=> (_audio, _controller) = (audio, wave);
-	}
+    }
 }
